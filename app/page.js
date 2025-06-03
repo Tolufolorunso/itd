@@ -52,10 +52,19 @@ export default function LoginPage() {
     setShowPin(!showPin);
   };
 
+  const navigateToMembers = () => {
+    router.push('/register');
+  };
+
   return (
     <div className="container">
       <div className="paper">
         <h1 className="title">ITD Staff Login</h1>
+        <div className="navigation">
+          <button onClick={navigateToMembers} className="btn btn-outline">
+            Register
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className={isLoading ? 'loading' : ''}>
           <div className="form-group">
             <label htmlFor="pin" className="form-label required">Staff PIN</label>
