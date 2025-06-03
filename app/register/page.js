@@ -107,8 +107,8 @@ export default function RegisterPage() {
                             onChange={handleChange}
                             required
                             disabled={isLoading}
-                            maxLength={3}
-                            minLength={3}
+                            max={3}
+                            min={3}
                         />
                         {formData.barcode.length > 0 && formData.barcode.length !== 3 && (
                             <div className="error-text">Barcode must be exactly 3 characters</div>
