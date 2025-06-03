@@ -7,6 +7,7 @@ export default function LoginPage() {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPin, setShowPin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      console.log('Login response:', { status: response.status, data }); // Debug log
 
       if (response.ok) {
         localStorage.setItem('auth', data.token);
@@ -39,10 +41,15 @@ export default function LoginPage() {
         setError(data.message || 'Invalid PIN');
       }
     } catch (err) {
+      console.error('Login error:', err); // Debug log
       setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const togglePinVisibility = () => {
+    setShowPin(!showPin);
   };
 
   return (
@@ -52,15 +59,25 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className={isLoading ? 'loading' : ''}>
           <div className="form-group">
             <label htmlFor="pin" className="form-label required">Staff PIN</label>
-            <input
-              type="password"
-              id="pin"
-              className="form-control"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              required
-              disabled={isLoading}
-            />
+            <div className="input-group">
+              <input
+                type={showPin ? "text" : "password"}
+                id="pin"
+                className="form-control"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                required
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="btn btn-outline input-group-btn"
+                onClick={togglePinVisibility}
+                tabIndex="-1"
+              >
+                {showPin ? '🔒' : '👁️'}
+              </button>
+            </div>
             {error && <div className="error-text">{error}</div>}
           </div>
           <button

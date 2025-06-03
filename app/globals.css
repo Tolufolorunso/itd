@@ -284,3 +284,28 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  flex: 1;
+}
+
+.input-group-btn {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.55rem 1rem;
+  min-width: 44px;
+}
+
+.input-group-btn:hover {
+  z-index: 2;
+}
