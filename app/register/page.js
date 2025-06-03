@@ -92,25 +92,26 @@ export default function RegisterPage() {
                             onChange={handleChange}
                             required
                             disabled={isLoading}
-                            maxLength={3}
-                            minLength={3}
+
                         />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="barcode" className="form-label required">Barcode</label>
                         <input
-                            type="text"
+                            type="number"
                             id="barcode"
                             name="barcode"
-                            className={`form-control ${formData.barcode.length > 0 && formData.barcode.length !== 8 ? 'error' : ''}`}
+                            className={`form-control ${formData.barcode.length > 0 && formData.barcode.length !== 3 ? 'error' : ''}`}
                             value={formData.barcode}
                             onChange={handleChange}
                             required
                             disabled={isLoading}
+                            maxLength={3}
+                            minLength={3}
                         />
-                        {formData.barcode.length > 0 && formData.barcode.length !== 8 && (
-                            <div className="error-text">Barcode must be exactly 8 characters</div>
+                        {formData.barcode.length > 0 && formData.barcode.length !== 3 && (
+                            <div className="error-text">Barcode must be exactly 3 characters</div>
                         )}
                     </div>
 
