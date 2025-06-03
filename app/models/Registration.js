@@ -31,6 +31,11 @@ const ITDregistrationSchema = new mongoose.Schema({
         default: 'YES',
         required: false,
     },
+    year: {
+        type: Number,
+        default: new Date().getFullYear(),
+        required: false,
+    }
 }, {
     timestamps: true,
 });
