@@ -7,7 +7,7 @@ export default function RegisterPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({
         name: '',
-        barcode: '20256',
+        barcode: '',
         gender: '',
         class: 'JSS',
         member: 'YES',
@@ -53,7 +53,7 @@ export default function RegisterPage() {
             if (response.ok) {
                 setFormData({
                     name: '',
-                    barcode: '20256',
+                    barcode: '',
                     gender: '',
                     class: 'JSS',
                     member: 'YES',

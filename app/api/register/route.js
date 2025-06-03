@@ -6,9 +6,20 @@ export async function POST(request) {
     try {
         const { name, barcode, gender, class: className, member } = await request.json();
 
-        if (!name) {
+
+
+        if (!name || !barcode) {
             return NextResponse.json(
-                { message: 'Name is required' },
+                { message: 'Name, Barcode are required' },
+                { status: 400 }
+            );
+        }
+
+        const isBarcodeExists = await ITDRegistration.findOne({ barcode: '20256' + barcode });
+
+        if (isBarcodeExists) {
+            return NextResponse.json(
+                { message: 'Barcode already exists' },
                 { status: 400 }
             );
         }
@@ -24,7 +35,7 @@ export async function POST(request) {
 
         const registration = await ITDRegistration.create({
             name,
-            barcode,
+            barcode: '20256' + barcode,
             gender,
             class: className,
             member,
