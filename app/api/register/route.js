@@ -4,15 +4,6 @@ import Registration from '@/app/models/Registration';
 
 export async function POST(request) {
     try {
-        // Check for authentication
-        const authToken = request.headers.get('Authorization');
-        if (!authToken) {
-            return NextResponse.json(
-                { message: 'Authentication required' },
-                { status: 401 }
-            );
-        }
-
         const { name, barcode, gender, class: className, member } = await request.json();
 
         if (!name) {

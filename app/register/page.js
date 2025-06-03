@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -14,18 +14,6 @@ export default function RegisterPage() {
     });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    // useEffect(() => {
-    //     const auth = localStorage.getItem('auth');
-    //     if (!auth) {
-    //         router.push('/');
-    //     }
-    // }, [router]);
-
-    const handleLogout = () => {
-        localStorage.removeItem('auth');
-        router.push('/');
-    };
 
     const navigateToMembers = () => {
         router.push('/members');
@@ -56,7 +44,6 @@ export default function RegisterPage() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('auth'),
                 },
                 body: JSON.stringify(formData),
             });
@@ -90,9 +77,6 @@ export default function RegisterPage() {
                     <div className="navigation">
                         <button onClick={navigateToMembers} className="btn btn-outline">
                             View Members
-                        </button>
-                        <button onClick={handleLogout} className="btn btn-outline">
-                            Logout
                         </button>
                     </div>
                 </div>

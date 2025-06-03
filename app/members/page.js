@@ -26,22 +26,12 @@ export default function MembersPage() {
     });
 
     useEffect(() => {
-        const auth = localStorage.getItem('auth');
-        if (!auth) {
-            router.push('/');
-            return;
-        }
-
         fetchMembers();
-    }, [router]);
+    }, []);
 
     const fetchMembers = async () => {
         try {
-            const response = await fetch('/api/members', {
-                headers: {
-                    'Authorization': localStorage.getItem('auth'),
-                },
-            });
+            const response = await fetch('/api/members');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch members');
