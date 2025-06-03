@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const registrationSchema = new mongoose.Schema({
+const ITDregistrationSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Name is required'],
@@ -35,6 +35,6 @@ const registrationSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-const Registration = mongoose.models.Registration || mongoose.model('Registration', registrationSchema);
+const ITDRegistration = mongoose.models.ITDRegistration || mongoose.model('ITDRegistration', ITDregistrationSchema);
 
-export default Registration; 
+export default ITDRegistration; 

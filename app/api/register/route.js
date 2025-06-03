@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import connectMongoDB from '@/lib/mongodb';
-import Registration from '@/app/models/Registration';
+import ITDRegistration from '@/app/models/Registration';
 
 export async function POST(request) {
     try {
@@ -22,7 +22,7 @@ export async function POST(request) {
 
         await connectMongoDB();
 
-        const registration = await Registration.create({
+        const registration = await ITDRegistration.create({
             name,
             barcode,
             gender,
