@@ -15,12 +15,12 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const auth = localStorage.getItem('auth');
-        if (!auth) {
-            router.push('/');
-        }
-    }, [router]);
+    // useEffect(() => {
+    //     const auth = localStorage.getItem('auth');
+    //     if (!auth) {
+    //         router.push('/');
+    //     }
+    // }, [router]);
 
     const handleLogout = () => {
         localStorage.removeItem('auth');
