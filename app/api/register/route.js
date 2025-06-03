@@ -15,6 +15,13 @@ export async function POST(request) {
             );
         }
 
+        if (!barcode || barcode.length !== 3) {
+            return NextResponse.json(
+                { message: 'Barcode must be exactly 3 characters' },
+                { status: 400 }
+            );
+        }
+
         const isBarcodeExists = await ITDRegistration.findOne({ barcode: '20256' + barcode });
 
         if (isBarcodeExists) {
@@ -24,12 +31,7 @@ export async function POST(request) {
             );
         }
 
-        if (!barcode || barcode.length !== 8) {
-            return NextResponse.json(
-                { message: 'Barcode must be exactly 8 characters' },
-                { status: 400 }
-            );
-        }
+
 
         await connectMongoDB();
 

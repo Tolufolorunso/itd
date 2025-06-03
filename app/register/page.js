@@ -32,8 +32,8 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.barcode.length !== 8) {
-            setError('Barcode must be exactly 8 characters');
+        if (formData.barcode.length !== 3) {
+            setError('Barcode must be exactly 3 characters');
             return;
         }
         setIsLoading(true);
@@ -92,6 +92,8 @@ export default function RegisterPage() {
                             onChange={handleChange}
                             required
                             disabled={isLoading}
+                            maxLength={3}
+                            minLength={3}
                         />
                     </div>
 
