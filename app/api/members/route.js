@@ -7,6 +7,9 @@ export async function GET() {
         await connectMongoDB();
         const registrations = await Registration.find().sort({ createdAt: -1 });
 
+        console.log(registrations);
+
+
         const response = NextResponse.json(registrations);
         response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
         return response;
