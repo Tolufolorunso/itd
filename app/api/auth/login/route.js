@@ -5,15 +5,15 @@ export async function POST(request) {
         const { pin } = await request.json();
         const staffPin = process.env.ITD_STAFF_PIN;
 
-        console.log('Login attempt:', {
-            receivedPin: pin,
-            expectedPin: staffPin,
-            hasStaffPin: !!staffPin,
-            env: process.env.NODE_ENV
-        });
+        // console.log('Login attempt:', {
+        //     receivedPin: pin,
+        //     expectedPin: staffPin,
+        //     hasStaffPin: !!staffPin,
+        //     env: process.env.NODE_ENV
+        // });
 
         if (!staffPin) {
-            console.error('ITD_STAFF_PIN environment variable is not set');
+            // console.error('ITD_STAFF_PIN environment variable is not set');
             return NextResponse.json(
                 { message: 'Server configuration error' },
                 { status: 500 }
@@ -34,7 +34,7 @@ export async function POST(request) {
             { status: 401 }
         );
     } catch (error) {
-        console.error('Login error:', error);
+        // console.error('Login error:', error);
         return NextResponse.json(
             { message: 'Server error', error: error.message },
             { status: 500 }

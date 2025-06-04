@@ -41,7 +41,6 @@ export default function MembersPage() {
             }
 
             const data = await response.json();
-            console.log(41, data);
             setMembers(data);
             setFilteredMembers(data);
             calculateStats(data);

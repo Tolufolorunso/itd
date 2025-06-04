@@ -32,7 +32,7 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
-      console.log('Login response:', { status: response.status, data }); // Debug log
+      // console.log('Login response:', { status: response.status, data }); 
 
       if (response.ok) {
         localStorage.setItem('auth', data.token);
@@ -41,7 +41,7 @@ export default function LoginPage() {
         setError(data.message || 'Invalid PIN');
       }
     } catch (err) {
-      console.error('Login error:', err); // Debug log
+      // console.error('Login error:', err); 
       setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);

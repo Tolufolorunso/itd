@@ -7,14 +7,14 @@ export async function GET() {
         await connectMongoDB();
         const registrations = await Registration.find().sort({ createdAt: -1 });
 
-        console.log(registrations);
+        // console.log(registrations);
 
 
         const response = NextResponse.json(registrations);
         response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
         return response;
     } catch (error) {
-        console.error('Error fetching registrations:', error);
+        // console.error('Error fetching registrations:', error);
         return NextResponse.json(
             { message: 'Failed to fetch registrations' },
             { status: 500 }

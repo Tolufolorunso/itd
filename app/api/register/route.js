@@ -24,7 +24,7 @@ export async function POST(request) {
         await connectMongoDB();
 
         const isBarcodeExists = await ITDRegistration.findOne({ barcode: '20256' + barcode });
-        console.log(isBarcodeExists);
+        // console.log(isBarcodeExists);
 
         if (isBarcodeExists) {
             return NextResponse.json(
@@ -49,7 +49,7 @@ export async function POST(request) {
             { status: 201 }
         );
     } catch (error) {
-        console.error('Registration error:', error);
+        // console.error('Registration error:', error);
         return NextResponse.json(
             { message: 'Failed to register' },
             { status: 500 }
