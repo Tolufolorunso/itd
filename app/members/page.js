@@ -33,9 +33,7 @@ export default function MembersPage() {
         try {
             const response = await fetch('/api/members', {
                 cache: 'no-store',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                }
+                next: { revalidate: 0 }
             });
 
             if (!response.ok) {
