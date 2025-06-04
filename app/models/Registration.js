@@ -25,12 +25,18 @@ const ITDregistrationSchema = new mongoose.Schema({
         default: 'JSS',
         required: false,
     },
+    isAttended: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
     member: {
         type: String,
         enum: ['YES', 'NO'],
         default: 'YES',
         required: false,
     },
+
     year: {
         type: Number,
         default: new Date().getFullYear(),

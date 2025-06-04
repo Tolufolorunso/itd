@@ -31,7 +31,12 @@ export default function MembersPage() {
 
     const fetchMembers = async () => {
         try {
-            const response = await fetch('/api/members');
+            const response = await fetch('/api/members', {
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to fetch members');
@@ -183,6 +188,7 @@ export default function MembersPage() {
                     <table className="table">
                         <thead>
                             <tr>
+                                <th>NO</th>
                                 <th>Barcode</th>
                                 <th>Name</th>
                                 <th>Gender</th>
@@ -192,8 +198,9 @@ export default function MembersPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredMembers.map((member) => (
+                            {filteredMembers.map((member, index) => (
                                 <tr key={member._id}>
+                                    <td>{index + 1}</td>
                                     <td>{member.barcode}</td>
                                     <td>{member.name}</td>
                                     <td>{member.gender}</td>

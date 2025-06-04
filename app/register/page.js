@@ -124,6 +124,7 @@ export default function RegisterPage() {
                             value={formData.gender}
                             onChange={handleChange}
                             disabled={isLoading}
+                            required
                         >
                             <option value="">Select Gender</option>
                             <option value="male">Male</option>
