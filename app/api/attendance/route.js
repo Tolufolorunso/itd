@@ -2,6 +2,8 @@ import connectMongoDB from "@/lib/mongodb";
 import ITDRegistration from "@/app/models/Registration";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0;
+
 export async function POST(request) {
     try {
         await connectMongoDB();
