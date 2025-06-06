@@ -57,54 +57,52 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container">
-      <div className="paper">
-        <h1 className="title">ITD Staff Login</h1>
-        <div className="navigation">
-          <button onClick={navigateToMembers} className="btn btn-outline">
-            Register
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className={isLoading ? 'loading' : ''}>
-          <div className="form-group">
-            <label htmlFor="pin" className="form-label required">Staff PIN</label>
-            <div className="input-group">
-              <input
-                type={showPin ? "text" : "password"}
-                id="pin"
-                className="form-control"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                required
-                disabled={isLoading}
-              />
-              <button
-                type="button"
-                className="btn btn-outline input-group-btn"
-                onClick={togglePinVisibility}
-                tabIndex="-1"
-              >
-                {showPin ? '🔒' : '👁️'}
-              </button>
-            </div>
-            {error && <div className="error-text">{error}</div>}
-          </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-full"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <div className="spinner"></div>
-                Signing In...
-              </>
-            ) : (
-              'Sign In'
-            )}
-          </button>
-        </form>
+    <div className="auth-container">
+      <h1 className="auth-title">ITD Staff Login</h1>
+      <div className="navigation">
+        <button onClick={navigateToMembers} className="btn btn-outline">
+          Register
+        </button>
       </div>
+      <form onSubmit={handleSubmit} className={`auth-form ${isLoading ? 'loading' : ''}`}>
+        <div className="form-group">
+          <label htmlFor="pin" className="form-label required">Staff PIN</label>
+          <div className="input-group">
+            <input
+              type={showPin ? "text" : "password"}
+              id="pin"
+              className="form-control"
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+              required
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              className="input-group-btn"
+              onClick={togglePinVisibility}
+              tabIndex="-1"
+            >
+              {showPin ? '🔒' : '👁️'}
+            </button>
+          </div>
+          {error && <div className="error-text">{error}</div>}
+        </div>
+        <button
+          type="submit"
+          className="btn-submit"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <div className="spinner"></div>
+              Signing In...
+            </>
+          ) : (
+            'Sign In'
+          )}
+        </button>
+      </form>
     </div>
   );
 }

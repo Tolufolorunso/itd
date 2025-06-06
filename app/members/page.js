@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useReactToPrint } from 'react-to-print';
 import AttendanceCharts from '../components/AttendanceCharts';
+import Pagination from '../components/Pagination';
 
 export default function MembersPage() {
     const router = useRouter();
@@ -19,6 +20,8 @@ export default function MembersPage() {
         attended: '',
     });
     const [years, setYears] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const [stats, setStats] = useState({
         total: 0,
@@ -36,12 +39,13 @@ export default function MembersPage() {
         byClass: {},
         byMember: {},
     });
+    const [statsYear, setStatsYear] = useState(new Date().getFullYear().toString());
 
     const statsRef = useRef();
 
     const handlePrint = useReactToPrint({
         content: () => statsRef.current,
-        documentTitle: `ITD-${filters.year}-Attendance-Stats`,
+        documentTitle: `ITD-${statsYear}-Attendance-Stats`,
     });
 
     useEffect(() => {
@@ -53,6 +57,11 @@ export default function MembersPage() {
     useEffect(() => {
         applyFilters();
     }, [filters, members]);
+
+    useEffect(() => {
+        const yearFilteredMembers = members.filter(m => m.year.toString() === statsYear);
+        calculateAttendanceStats(yearFilteredMembers);
+    }, [statsYear, members]);
 
     const fetchMembers = async () => {
         try {
@@ -123,6 +132,7 @@ export default function MembersPage() {
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters(prev => ({ ...prev, [name]: value }));
+        setCurrentPage(1);
     };
 
     const applyFilters = () => {
@@ -154,6 +164,11 @@ export default function MembersPage() {
     const handleBack = () => {
         router.push('/register');
     };
+
+    const paginatedMembers = filteredMembers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     if (isLoading) {
         return (
@@ -193,7 +208,17 @@ export default function MembersPage() {
 
                 <div className="my-8" ref={statsRef}>
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold">ITD {filters.year} Attendance Stats</h2>
+                        <div className="flex items-center gap-4">
+                            <h2 className="text-xl font-bold">ITD Attendance Stats</h2>
+                            <select
+                                name="statsYear"
+                                className="form-select"
+                                value={statsYear}
+                                onChange={(e) => setStatsYear(e.target.value)}
+                            >
+                                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                        </div>
                         <button onClick={handlePrint} className="btn btn-primary">Print/Download Stats</button>
                     </div>
                     <div className="stats-grid">
@@ -312,9 +337,9 @@ export default function MembersPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredMembers.map((member, index) => (
+                            {paginatedMembers.map((member, index) => (
                                 <tr key={member._id}>
-                                    <td>{index + 1}</td>
+                                    <td>{((currentPage - 1) * itemsPerPage) + index + 1}</td>
                                     <td>{member.barcode}</td>
                                     <td>{member.name}</td>
                                     <td>{member.gender}</td>
@@ -324,7 +349,7 @@ export default function MembersPage() {
                                     <td>{new Date(member.createdAt).toLocaleDateString()}</td>
                                 </tr>
                             ))}
-                            {filteredMembers.length === 0 && (
+                            {paginatedMembers.length === 0 && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: 'center' }}>
                                         No members found
@@ -334,6 +359,17 @@ export default function MembersPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination
+                    totalItems={filteredMembers.length}
+                    itemsPerPage={itemsPerPage}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    onItemsPerPageChange={(value) => {
+                        setItemsPerPage(value);
+                        setCurrentPage(1);
+                    }}
+                />
             </div>
         </div>
     );

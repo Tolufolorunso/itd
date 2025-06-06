@@ -66,113 +66,108 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="container">
-            <div className="paper">
-                <div className="header">
-                    <h1 className="title">IJERO Tech 2025 Event Registration</h1>
+        <div className="auth-container">
+            <h1 className="auth-title">Event Registration</h1>
+            <form onSubmit={handleSubmit} className={`auth-form ${isLoading ? 'loading' : ''}`}>
+                <div className="form-group">
+                    <label htmlFor="name" className="form-label required">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        className="form-control"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        disabled={isLoading}
+                    />
                 </div>
-                <form onSubmit={handleSubmit} className={isLoading ? 'loading' : ''}>
-                    <div className="form-group">
-                        <label htmlFor="name" className="form-label required">Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            className="form-control"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            disabled={isLoading}
 
-                        />
-                    </div>
+                <div className="form-group">
+                    <label htmlFor="barcode" className="form-label required">Barcode</label>
+                    <input
+                        type="number"
+                        id="barcode"
+                        name="barcode"
+                        className={`form-control ${formData.barcode.length > 0 && formData.barcode.length !== 3 ? 'error' : ''}`}
+                        value={formData.barcode}
+                        onChange={handleChange}
+                        required
+                        disabled={isLoading}
+                        maxLength={3}
+                        minLength={3}
+                    />
+                    {formData.barcode.length > 0 && formData.barcode.length !== 3 && (
+                        <div className="error-text">Barcode must be exactly 3 characters</div>
+                    )}
+                </div>
 
-                    <div className="form-group">
-                        <label htmlFor="barcode" className="form-label required">Barcode</label>
-                        <input
-                            type="number"
-                            id="barcode"
-                            name="barcode"
-                            className={`form-control ${formData.barcode.length > 0 && formData.barcode.length !== 3 ? 'error' : ''}`}
-                            value={formData.barcode}
-                            onChange={handleChange}
-                            required
-                            disabled={isLoading}
-                            maxLength={3}
-                            minLength={3}
-                        />
-                        {formData.barcode.length > 0 && formData.barcode.length !== 3 && (
-                            <div className="error-text">Barcode must be exactly 3 characters</div>
-                        )}
-                    </div>
+                <div className="form-group">
+                    <label htmlFor="gender" className="form-label">Gender</label>
+                    <select
+                        id="gender"
+                        name="gender"
+                        className="form-select"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        disabled={isLoading}
+                        required
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
 
-                    <div className="form-group">
-                        <label htmlFor="gender" className="form-label">Gender</label>
-                        <select
-                            id="gender"
-                            name="gender"
-                            className="form-select"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            required
-                        >
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="class" className="form-label">Class</label>
-                        <select
-                            id="class"
-                            name="class"
-                            className="form-select"
-                            value={formData.class}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                        >
-                            <option value="JSS">JSS</option>
-                            <option value="SSS">SSS</option>
-                            <option value="Teacher">Teacher</option>
-                            <option value="Principal">Principal</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="member" className="form-label">Member</label>
-                        <select
-                            id="member"
-                            name="member"
-                            className="form-select"
-                            value={formData.member}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                        >
-                            <option value="YES">YES</option>
-                            <option value="NO">NO</option>
-                        </select>
-                    </div>
-
-                    {error && <div className="error-text">{error}</div>}
-
-                    <button
-                        type="submit"
-                        className="btn btn-primary btn-full"
+                <div className="form-group">
+                    <label htmlFor="class" className="form-label">Class</label>
+                    <select
+                        id="class"
+                        name="class"
+                        className="form-select"
+                        value={formData.class}
+                        onChange={handleChange}
                         disabled={isLoading}
                     >
-                        {isLoading ? (
-                            <>
-                                <div className="spinner"></div>
-                                Registering...
-                            </>
-                        ) : (
-                            'Register'
-                        )}
-                    </button>
-                </form>
-            </div>
+                        <option value="JSS">JSS</option>
+                        <option value="SSS">SSS</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Principal">Principal</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="member" className="form-label">Member</label>
+                    <select
+                        id="member"
+                        name="member"
+                        className="form-select"
+                        value={formData.member}
+                        onChange={handleChange}
+                        disabled={isLoading}
+                    >
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+
+                {error && <div className="error-text">{error}</div>}
+
+                <button
+                    type="submit"
+                    className="btn-submit"
+                    disabled={isLoading}
+                >
+                    {isLoading ? (
+                        <>
+                            <div className="spinner"></div>
+                            Registering...
+                        </>
+                    ) : (
+                        'Register'
+                    )}
+                </button>
+            </form>
         </div>
     );
 } 

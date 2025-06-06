@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar';
 import './globals.css';
+import '../public/styles/globals.css';
 
 export const metadata = {
   title: "ITD - Registration",
