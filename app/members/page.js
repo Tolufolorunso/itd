@@ -11,6 +11,7 @@ export default function MembersPage() {
     const [members, setMembers] = useState([]);
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
     const [filters, setFilters] = useState({
         barcode: '',
         gender: '',
@@ -209,14 +210,19 @@ export default function MembersPage() {
                 <div className="my-8" ref={statsRef}>
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-4">
-                            <h2 className="text-xl font-bold">ITD Attendance Stats</h2>
+                            <h2 className="text-xl font-bold">ITD {selectedYear} Attendance Stats</h2>
                             <select
                                 name="statsYear"
                                 className="form-select"
                                 value={statsYear}
                                 onChange={(e) => setStatsYear(e.target.value)}
                             >
-                                {years.map(y => <option key={y} value={y}>{y}</option>)}
+                                {years.map(y => {
+                                    if (y === selectedYear) {
+                                        return <option key={y} value={y} selected>{y}</option>
+                                    }
+                                    return <option key={y} value={y}>{y}</option>
+                                })}
                             </select>
                         </div>
                         <button onClick={handlePrint} className="btn btn-primary">Print/Download Stats</button>

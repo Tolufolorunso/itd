@@ -488,7 +488,7 @@ body {
 
 .navbar-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 .navbar-link {
@@ -508,3 +508,9 @@ body {
   color: #2b6cb0;
   border-bottom-color: #2b6cb0;
 } 
+
+@media (max-width: 768px) {
+  .navbar-link {
+      font-size: 0.8rem;
+  }
+}

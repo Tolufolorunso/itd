@@ -16,7 +16,7 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link href="/" className="navbar-brand">
-                    ITD Event
+                    ITD{new Date().getFullYear()}
                 </Link>
                 <div className="navbar-links">
                     {navLinks.map(link => (
