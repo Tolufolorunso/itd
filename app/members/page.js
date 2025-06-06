@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useReactToPrint } from 'react-to-print';
+import AttendanceCharts from '../components/AttendanceCharts';
 
 export default function MembersPage() {
     const router = useRouter();
@@ -13,7 +15,10 @@ export default function MembersPage() {
         gender: '',
         class: '',
         member: '',
+        year: new Date().getFullYear().toString(),
+        attended: '',
     });
+    const [years, setYears] = useState([]);
 
     const [stats, setStats] = useState({
         total: 0,
@@ -25,15 +30,34 @@ export default function MembersPage() {
         principal: 0,
     });
 
+    const [attendanceStats, setAttendanceStats] = useState({
+        total: 0,
+        byGender: {},
+        byClass: {},
+        byMember: {},
+    });
+
+    const statsRef = useRef();
+
+    const handlePrint = useReactToPrint({
+        content: () => statsRef.current,
+        documentTitle: `ITD-${filters.year}-Attendance-Stats`,
+    });
+
     useEffect(() => {
         fetchMembers();
+        const interval = setInterval(fetchMembers, 5000); // Refresh every 5 seconds
+        return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        applyFilters();
+    }, [filters, members]);
 
     const fetchMembers = async () => {
         try {
             const response = await fetch('/api/members', {
-                cache: 'no-store',
-                next: { revalidate: 0 }
+                cache: 'no-store'
             });
 
             if (!response.ok) {
@@ -42,7 +66,13 @@ export default function MembersPage() {
 
             const data = await response.json();
             setMembers(data);
-            setFilteredMembers(data);
+
+            const uniqueYears = [...new Set(data.map(item => item.year))].sort((a, b) => b - a);
+            setYears(uniqueYears);
+            if (!filters.year && uniqueYears.length > 0) {
+                setFilters(prev => ({ ...prev, year: uniqueYears[0].toString() }));
+            }
+
             calculateStats(data);
         } catch (error) {
             console.error('Error fetching members:', error);
@@ -64,25 +94,61 @@ export default function MembersPage() {
         setStats(stats);
     };
 
+    const calculateAttendanceStats = (data) => {
+        const attendedMembers = data.filter(m => m.isAttended);
+
+        const byGender = attendedMembers.reduce((acc, m) => {
+            acc[m.gender] = (acc[m.gender] || 0) + 1;
+            return acc;
+        }, {});
+
+        const byClass = attendedMembers.reduce((acc, m) => {
+            acc[m.class] = (acc[m.class] || 0) + 1;
+            return acc;
+        }, {});
+
+        const byMember = attendedMembers.reduce((acc, m) => {
+            acc[m.member] = (acc[m.member] || 0) + 1;
+            return acc;
+        }, {});
+
+        setAttendanceStats({
+            total: attendedMembers.length,
+            byGender,
+            byClass,
+            byMember,
+        });
+    }
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        const newFilters = { ...filters, [name]: value };
-        setFilters(newFilters);
+        setFilters(prev => ({ ...prev, [name]: value }));
+    };
 
+    const applyFilters = () => {
         let filtered = [...members];
-        if (newFilters.barcode) {
-            filtered = filtered.filter(m => m.barcode.includes(newFilters.barcode));
+
+        if (filters.year) {
+            filtered = filtered.filter(m => m.year.toString() === filters.year);
         }
-        if (newFilters.gender) {
-            filtered = filtered.filter(m => m.gender.toLowerCase() === newFilters.gender.toLowerCase());
+        if (filters.barcode) {
+            filtered = filtered.filter(m => m.barcode.includes(filters.barcode));
         }
-        if (newFilters.class) {
-            filtered = filtered.filter(m => m.class === newFilters.class);
+        if (filters.gender) {
+            filtered = filtered.filter(m => m.gender.toLowerCase() === filters.gender.toLowerCase());
         }
-        if (newFilters.member) {
-            filtered = filtered.filter(m => m.member === newFilters.member);
+        if (filters.class) {
+            filtered = filtered.filter(m => m.class === filters.class);
+        }
+        if (filters.member) {
+            filtered = filtered.filter(m => m.member === filters.member);
+        }
+        if (filters.attended) {
+            const attendedBool = filters.attended === 'true';
+            filtered = filtered.filter(m => m.isAttended === attendedBool);
         }
         setFilteredMembers(filtered);
+        calculateAttendanceStats(filtered)
     };
 
     const handleBack = () => {
@@ -100,15 +166,10 @@ export default function MembersPage() {
     }
 
     return (
-        <div className="container">
+        <div className="container mx-auto p-4">
             <div className="paper">
                 <div className="header">
                     <h1 className="title">Registered Members</h1>
-                    <div className="navigation">
-                        <button onClick={handleBack} className="btn btn-outline">
-                            Back to Registration
-                        </button>
-                    </div>
                 </div>
 
                 <div className="stats-grid">
@@ -128,6 +189,38 @@ export default function MembersPage() {
                         <div className="stat-number">{stats.jss + stats.sss}</div>
                         <div className="stat-label">Students</div>
                     </div>
+                </div>
+
+                <div className="my-8" ref={statsRef}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold">ITD {filters.year} Attendance Stats</h2>
+                        <button onClick={handlePrint} className="btn btn-primary">Print/Download Stats</button>
+                    </div>
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <div className="stat-number">{attendanceStats.total}</div>
+                            <div className="stat-label">Total Attended</div>
+                        </div>
+                        {Object.entries(attendanceStats.byGender).map(([gender, count]) => (
+                            <div className="stat-card" key={gender}>
+                                <div className="stat-number">{count}</div>
+                                <div className="stat-label">{gender}</div>
+                            </div>
+                        ))}
+                         {Object.entries(attendanceStats.byClass).map(([className, count]) => (
+                            <div className="stat-card" key={className}>
+                                <div className="stat-number">{count}</div>
+                                <div className="stat-label">{className}</div>
+                            </div>
+                        ))}
+                         {Object.entries(attendanceStats.byMember).map(([member, count]) => (
+                            <div className="stat-card" key={member}>
+                                <div className="stat-number">{count}</div>
+                                <div className="stat-label">Member: {member}</div>
+                            </div>
+                        ))}
+                    </div>
+                    {attendanceStats.total > 0 && <AttendanceCharts stats={attendanceStats} />}
                 </div>
 
                 <div className="filters">
@@ -179,6 +272,29 @@ export default function MembersPage() {
                             <option value="NO">NO</option>
                         </select>
                     </div>
+                     <div className="form-group">
+                        <select
+                            name="year"
+                            className="form-select"
+                            value={filters.year}
+                            onChange={handleFilterChange}
+                        >
+                            <option value="">All Years</option>
+                            {years.map(y => <option key={y} value={y}>{`ITD ${y}`}</option>)}
+                        </select>
+                    </div>
+                     <div className="form-group">
+                        <select
+                            name="attended"
+                            className="form-select"
+                            value={filters.attended}
+                            onChange={handleFilterChange}
+                        >
+                            <option value="">All</option>
+                            <option value="true">Attended</option>
+                            <option value="false">Not Attended</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="table-container">
@@ -191,6 +307,7 @@ export default function MembersPage() {
                                 <th>Gender</th>
                                 <th>Class</th>
                                 <th>Member</th>
+                                <th>Attended</th>
                                 <th>Date Registered</th>
                             </tr>
                         </thead>
@@ -203,12 +320,13 @@ export default function MembersPage() {
                                     <td>{member.gender}</td>
                                     <td>{member.class}</td>
                                     <td>{member.member}</td>
+                                    <td>{member.isAttended ? 'Yes' : 'No'}</td>
                                     <td>{new Date(member.createdAt).toLocaleDateString()}</td>
                                 </tr>
                             ))}
                             {filteredMembers.length === 0 && (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                    <td colSpan="8" style={{ textAlign: 'center' }}>
                                         No members found
                                     </td>
                                 </tr>

@@ -15,10 +15,6 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const navigateToMembers = () => {
-        router.push('/members');
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'barcode' && value.length > 8) {
@@ -74,11 +70,6 @@ export default function RegisterPage() {
             <div className="paper">
                 <div className="header">
                     <h1 className="title">IJERO Tech 2025 Event Registration</h1>
-                    <div className="navigation">
-                        <button onClick={navigateToMembers} className="btn btn-outline">
-                            View Members
-                        </button>
-                    </div>
                 </div>
                 <form onSubmit={handleSubmit} className={isLoading ? 'loading' : ''}>
                     <div className="form-group">
